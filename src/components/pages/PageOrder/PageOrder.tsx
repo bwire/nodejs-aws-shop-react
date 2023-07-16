@@ -35,15 +35,22 @@ export default function PageOrder() {
     {
       queryKey: ["order", { id }],
       queryFn: async () => {
-        const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`);
-        return res.data;
+        const res = await axios.get(`${API_PATHS.order}/profile/orders/${id}`, {
+          headers: {
+            Authorization: `Basic ${localStorage.getItem(
+              "authorization_token"
+            )}`,
+          },
+        });
+
+        return res.data.data;
       },
     },
     {
       queryKey: "products",
       queryFn: async () => {
         const res = await axios.get<AvailableProduct[]>(
-          `${API_PATHS.bff}/product/available`
+          `${API_PATHS.bff}/products`
         );
         return res.data;
       },
@@ -53,8 +60,10 @@ export default function PageOrder() {
     { data: order, isLoading: isOrderLoading },
     { data: products, isLoading: isProductsLoading },
   ] = results;
+
   const { mutateAsync: updateOrderStatus } = useUpdateOrderStatus();
   const invalidateOrder = useInvalidateOrder();
+
   const cartItems: CartItem[] = React.useMemo(() => {
     if (order && products) {
       return order.items.map((item: OrderItem) => {
@@ -72,8 +81,6 @@ export default function PageOrder() {
 
   const statusHistory = order?.statusHistory || [];
 
-  const lastStatusItem = statusHistory[statusHistory.length - 1];
-
   return order ? (
     <PaperLayout>
       <Typography component="h1" variant="h4" align="center">
@@ -82,12 +89,12 @@ export default function PageOrder() {
       <ReviewOrder address={order.address} items={cartItems} />
       <Typography variant="h6">Status:</Typography>
       <Typography variant="h6" color="primary">
-        {lastStatusItem?.status.toUpperCase()}
+        {order.status}
       </Typography>
       <Typography variant="h6">Change status:</Typography>
       <Box py={2}>
         <Formik
-          initialValues={{ status: lastStatusItem.status, comment: "" }}
+          initialValues={{ status: OrderStatus.Confirmed, comment: "" }}
           enableReinitialize
           onSubmit={(values) =>
             updateOrderStatus(

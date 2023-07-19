@@ -49,20 +49,7 @@ export default function ProductsTable() {
                   component={Link}
                   to={`/admin/product-form/${product.id}`}
                 >
-                  Manage
-                </Button>
-                <Button
-                  size="small"
-                  color="secondary"
-                  onClick={() => {
-                    if (product.id) {
-                      deleteAvailableProduct(product.id, {
-                        onSuccess: invalidateAvailableProducts,
-                      });
-                    }
-                  }}
-                >
-                  Delete
+                  View
                 </Button>
               </TableCell>
             </TableRow>

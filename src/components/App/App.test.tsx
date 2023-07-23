@@ -17,6 +17,7 @@ test("Renders products list", async () => {
       title: "Product 1",
       description: "Product 1 description",
       price: 1,
+      image: "https://m.media-amazon.com/images/I/51MUg63YyLL._SY346_.jpg",
       count: 1,
     },
     {
@@ -24,6 +25,7 @@ test("Renders products list", async () => {
       title: "Product 2",
       description: "Product 2 description",
       price: 2,
+      image: "https://m.media-amazon.com/images/I/51MUg63YyLL._SY346_.jpg",
       count: 2,
     },
   ];

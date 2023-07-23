@@ -35,7 +35,7 @@ export default function Products() {
               <Typography>{formatAsPrice(product.price)}</Typography>
             </CardContent>
             <CardActions>
-              <AddProductToCart product={product} />
+              <AddProductToCart product={{ image, ...product }} />
             </CardActions>
           </Card>
         </Grid>

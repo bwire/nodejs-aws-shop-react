@@ -1,5 +1,5 @@
 import React from "react";
-import { Order, OrderItem } from "~/models/Order";
+import { OrderItem } from "~/models/Order";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import PaperLayout from "~/components/PaperLayout/PaperLayout";
@@ -35,7 +35,7 @@ export default function PageOrder() {
     {
       queryKey: ["order", { id }],
       queryFn: async () => {
-        const res = await axios.get(`${API_PATHS.order}/profile/orders/${id}`, {
+        const res = await axios.get(`${API_PATHS.order}/${id}`, {
           headers: {
             Authorization: `Basic ${localStorage.getItem(
               "authorization_token"
@@ -49,9 +49,7 @@ export default function PageOrder() {
     {
       queryKey: "products",
       queryFn: async () => {
-        const res = await axios.get<AvailableProduct[]>(
-          `${API_PATHS.bff}/products`
-        );
+        const res = await axios.get<AvailableProduct[]>(API_PATHS.product);
         return res.data;
       },
     },

@@ -1,43 +1,19 @@
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { AvailableProduct, AvailableProductSchema } from "~/models/Product";
-import { Formik, Field, FormikProps, Form } from "formik";
+import { Formik, Field, Form } from "formik";
 import TextField from "~/components/Form/TextField";
 import { useNavigate, useParams } from "react-router-dom";
 import PaperLayout from "~/components/PaperLayout/PaperLayout";
 import Typography from "@mui/material/Typography";
-import {
-  useAvailableProduct,
-  useInvalidateAvailableProducts,
-  useRemoveProductCache,
-  useUpsertAvailableProduct,
-} from "~/queries/products";
+import { useAvailableProduct } from "~/queries/products";
 
 const initialValues: AvailableProduct = AvailableProductSchema.cast({});
 
 export default function PageProductForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const invalidateAvailableProducts = useInvalidateAvailableProducts();
-  const removeProductCache = useRemoveProductCache();
   const { data, isLoading } = useAvailableProduct(id);
-  const { mutateAsync: upsertAvailableProduct } = useUpsertAvailableProduct();
-  const onSubmit = (values: AvailableProduct) => {
-    const formattedValues = AvailableProductSchema.cast(values);
-    const productToSave = id
-      ? {
-          ...formattedValues,
-          id,
-        }
-      : formattedValues;
-    return upsertAvailableProduct(productToSave, {
-      onSuccess: () => {
-        invalidateAvailableProducts();
-        removeProductCache(id);
-        navigate("/admin/products");
-      },
-    });
-  };
 
   return (
     <PaperLayout>
@@ -50,9 +26,10 @@ export default function PageProductForm() {
         <Formik
           initialValues={data ?? initialValues}
           validationSchema={AvailableProductSchema}
-          onSubmit={onSubmit}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onSubmit={() => {}}
         >
-          {({ dirty, isSubmitting }: FormikProps<AvailableProduct>) => (
+          {() => (
             <Form autoComplete="off">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -102,14 +79,6 @@ export default function PageProductForm() {
                     onClick={() => navigate("/admin/products")}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={!dirty || isSubmitting}
-                  >
-                    Save Product
                   </Button>
                 </Grid>
               </Grid>

@@ -17,6 +17,7 @@ test("Renders products list", async () => {
       title: "Product 1",
       description: "Product 1 description",
       price: 1,
+      image: "https://m.media-amazon.com/images/I/51MUg63YyLL._SY346_.jpg",
       count: 1,
     },
     {
@@ -24,18 +25,19 @@ test("Renders products list", async () => {
       title: "Product 2",
       description: "Product 2 description",
       price: 2,
+      image: "https://m.media-amazon.com/images/I/51MUg63YyLL._SY346_.jpg",
       count: 2,
     },
   ];
   server.use(
-    rest.get(`${API_PATHS.bff}/product/available`, (req, res, ctx) => {
+    rest.get(API_PATHS.product, (req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.delay(),
         ctx.json<AvailableProduct[]>(products)
       );
     }),
-    rest.get(`${API_PATHS.cart}/profile/cart`, (req, res, ctx) => {
+    rest.get(API_PATHS.cart, (req, res, ctx) => {
       return res(ctx.status(200), ctx.json<CartItem[]>([]));
     })
   );

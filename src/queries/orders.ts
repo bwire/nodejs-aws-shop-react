@@ -7,7 +7,7 @@ import { Order } from "~/models/Order";
 
 export function useOrders() {
   return useQuery<Order[], AxiosError>("orders", async () => {
-    const res = await axios.get(`${API_PATHS.order}/profile/orders`, {
+    const res = await axios.get(API_PATHS.order, {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
@@ -28,7 +28,7 @@ export function useUpdateOrderStatus() {
   return useMutation(
     (values: { id: string; status: OrderStatus; comment: string }) => {
       const { id, ...data } = values;
-      return axios.put(`${API_PATHS.order}/profile/orders/${id}/status`, data, {
+      return axios.put(`${API_PATHS.order}/${id}/status`, data, {
         headers: {
           Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
         },
@@ -39,15 +39,11 @@ export function useUpdateOrderStatus() {
 
 export function useSubmitOrder() {
   return useMutation((values: Omit<Order, "id">) => {
-    return axios.post<Omit<Order, "id">>(
-      `${API_PATHS.order}/profile/cart/checkout`,
-      values,
-      {
-        headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-        },
-      }
-    );
+    return axios.post<Omit<Order, "id">>(`${API_PATHS.cart}/checkout`, values, {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+      },
+    });
   });
 }
 
@@ -62,7 +58,7 @@ export function useInvalidateOrder() {
 
 export function useDeleteOrder() {
   return useMutation((id: string) =>
-    axios.delete(`${API_PATHS.order}/profile/orders/${id}`, {
+    axios.delete(`${API_PATHS.order}/${id}`, {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
